@@ -73,11 +73,31 @@ const elements: Elements[] = [
   {
     locator: (page: Page): Locator =>
       page.getByRole('button', { name: 'Switch between dark and light' }),
-    name: 'Switch between dark and light',
+    name: 'Theme Switch',
   },
   {
     locator: (page: Page): Locator => page.getByRole('button', { name: 'Search (Meta+k)' }),
     name: 'Search',
+  },
+  {
+    locator: (page: Page): Locator =>
+      page.getByRole('heading', {
+        name: 'Playwright enables reliable',
+      }),
+    name: 'Page Heading',
+    text: 'Playwright enables reliable web automation for testing, scripting, and AI agents.',
+  },
+  {
+    locator: (page: Page): Locator =>
+      page.getByRole('link', {
+        name: 'Get started',
+      }),
+    name: 'Get Started Button',
+    text: 'Get started',
+    attribute: {
+      type: 'href',
+      value: '/docs/intro',
+    },
   },
 ];
 
@@ -86,7 +106,7 @@ test.describe('Home Page Tests', () => {
     await page.goto('https://playwright.dev/');
   });
 
-  test('Verify navigation elements are displayed', async ({ page }) => {
+  test('Verify elements are visible', async ({ page }) => {
     for (const { name, locator } of elements) {
       await test.step(`Verify "${name}" is visible`, async () => {
         await expect.soft(locator(page)).toBeVisible();
@@ -94,7 +114,7 @@ test.describe('Home Page Tests', () => {
     }
   });
 
-  test('Verify navigation element text', async ({ page }) => {
+  test('Verify element text', async ({ page }) => {
     for (const { name, text, locator } of elements) {
       if (!text) continue;
 
@@ -104,7 +124,7 @@ test.describe('Home Page Tests', () => {
     }
   });
 
-  test('Verify navigation element attributes', async ({ page }) => {
+  test('Verify element attributes', async ({ page }) => {
     for (const { name, attribute, locator } of elements) {
       if (!attribute) continue;
 
@@ -115,32 +135,12 @@ test.describe('Home Page Tests', () => {
   });
 
   test('Verify light theme switch', async ({ page }) => {
-    await page.getByLabel('Switch between dark and light').click();
+    await page
+      .getByRole('button', {
+        name: 'Switch between dark and light',
+      })
+      .click();
 
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
-  });
-
-  test('Verify page heading', async ({ page }) => {
-    const heading: Locator = page.getByRole('heading', {
-      name: 'Playwright enables reliable',
-    });
-
-    await expect(heading).toBeVisible();
-
-    await expect(heading).toContainText(
-      'Playwright enables reliable web automation for testing, scripting, and AI agents.',
-    );
-  });
-
-  test('Verify Get Started button', async ({ page }) => {
-    const getStarted: Locator = page.getByRole('link', {
-      name: 'Get started',
-    });
-
-    await expect.soft(getStarted).toBeVisible();
-
-    await expect.soft(getStarted).toContainText('Get started');
-
-    await expect.soft(getStarted).toHaveAttribute('href', '/docs/intro');
   });
 });
