@@ -1,31 +1,23 @@
-import { test } from '@playwright/test';
-import { MainPage } from '../models/MainPage';
+import { test } from '../fixtures/fixtures';
 import { Theme } from '../models/Elements';
 
 const THEMES: Theme[] = ['light', 'dark'];
 
 test.describe('Home Page Tests', () => {
-  let mainPage: MainPage;
-
-  test.beforeEach(async ({ page }) => {
-    mainPage = new MainPage(page);
-    await mainPage.openMainPage();
-  });
-
-  test('Verify header navigation elements are visible', async () => {
+  test('Verify header navigation elements are visible', async ({ mainPage }) => {
     await mainPage.checkElementsVisibility();
   });
 
-  test('Verify header navigation elements text', async () => {
+  test('Verify header navigation elements text', async ({ mainPage }) => {
     await mainPage.checkElementsText();
   });
 
-  test('Verify header navigation elements attributes', async () => {
+  test('Verify header navigation elements attributes', async ({ mainPage }) => {
     await mainPage.checkElementsAttributes();
   });
 
   THEMES.forEach((theme) => {
-    test(`Verify switching to "${theme}" theme`, async () => {
+    test(`Verify switching to "${theme}" theme`, async ({ mainPage }) => {
       await mainPage.checkTheme(theme);
     });
   });
@@ -34,15 +26,8 @@ test.describe('Home Page Tests', () => {
 // ---------------- Visual Regression Tests ----------------
 
 test.describe('Theme visual regression tests', () => {
-  let mainPage: MainPage;
-
-  test.beforeEach(async ({ page }) => {
-    mainPage = new MainPage(page);
-    await mainPage.openMainPage();
-  });
-
   THEMES.forEach((theme) => {
-    test(`Verify visual regression in "${theme}" theme`, async () => {
+    test(`Verify visual regression in "${theme}" theme`, async ({ mainPage }) => {
       await mainPage.checkTheme(theme);
       await mainPage.checkVisualSnapshot(theme);
     });
