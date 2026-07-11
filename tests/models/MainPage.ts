@@ -147,7 +147,7 @@ export class MainPage {
     });
   }
 
-  /** Takes and compares a visual snapshot of the page in the given theme. */
+  /** Creates a visual snapshot of the page and compares it against the expected result for the selected theme. */
   async checkVisualSnapshot(theme: Theme): Promise<void> {
     await test.step(`Verify visual snapshot in "${theme}" theme`, async () => {
       await expect(this.page).toHaveScreenshot(`${theme}-mode.png`, {
